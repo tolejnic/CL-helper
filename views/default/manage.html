@@ -1,0 +1,5 @@
+{{extend 'layout.html'}}
+<a href={{=URL("index")}} class="btn btn-success"> <i class="icon-refresh icon-white"></i> Refresh </a>
+<a href={{=URL("add_link")}} class="btn btn-primary"> <i class="icon-plus icon-white"></i> Add URL </a>
+<a style="float:right" href={{=URL("delete_all")}} class="btn btn-danger"> <i class="icon-remove icon-white"></i> Delete All </a>
+{{=table}}

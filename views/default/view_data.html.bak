@@ -1,0 +1,2 @@
+{{extend 'layout.html'}}
+{{row.raw_text}}

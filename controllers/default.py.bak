@@ -1,0 +1,177 @@
+# -*- coding: utf-8 -*-
+# this file is released under public domain and you can use without limitations
+
+#########################################################################
+## This is a sample controller
+## - index is the default action of any application
+## - user is required for authentication and authorization
+## - download is for downloading files uploaded in the db (does streaming)
+## - call exposes all registered services (none by default)
+#########################################################################
+
+from bs4 import BeautifulSoup
+import requests
+
+def index():
+    """
+    example action using the internationalization operator T and flash
+    rendered by views/default/index.html or views/generic.html
+
+    if you need a simple wiki simply replace the two lines below with:
+    return auth.wiki()
+    """
+
+    rows = db().select(db.urls.ALL)
+    for row in rows:
+        url = row.url
+        try:
+            r  = requests.get(url)
+            data = str(r.text)
+            try:
+                row = db(db.raw_html.raw_text).select().first()
+                raw_data = str(row.raw_text)
+                if raw_data == data:
+                    return redirect(URL('manage'))
+                else:
+                    #row.update_record(raw_text = data)
+                    return redirect(URL('manage'))
+                    #return "update error"
+            except:
+                db.raw_html.insert(raw_text=data)
+                #return "insert error"
+        except:
+            return "Couldn't open webpage: %s" %(url)
+        soup = BeautifulSoup(data)
+        date = []
+        try:
+            for link, url in zip(soup.find_all('p', class_='row'), soup.find_all('a', class_='i')):
+                date = link.get_text().split()
+                loc = link.get_text().split("(")
+                db.links.insert(name = " ".join(date[2:-1]), url = url.get('href'), city = loc[-1].split(")")[0], created_time=str(date[0]+" "+date[1]))
+        except:
+            return "Couldn't find links: %s" %(url)
+    return redirect(URL('manage'))
+    
+
+
+def manage():
+    headers = {
+           'links.created_time': 'Date',
+           'links.city': 'City',
+           'links.name': 'Title',
+           }
+    
+    fields = (db.links.created_time, db.links.name, db.links.city, db.links.url)
+
+    table = SQLFORM.grid(db.links, headers=headers, fields=fields, maxtextlength=100, paginate=10, deletable=True, details=False, searchable=False, links = 
+       [lambda row: A('view', _href='http://sfbay.craigslist.org'+str(row.url)), 
+        lambda row: A('delete',_href=URL("delete",args=[row.id]))]) 
+    return dict(table=table)
+
+def add_link():
+    form = SQLFORM(db.urls)
+    if form.process().accepted:
+        response.flash = 'URL added'
+        return redirect(URL('manage_links'))
+    elif form.errors:
+        response.flash = 'URL has errors'
+    else:
+        response.flash = 'please enter a URL'
+
+    return dict(form=form)
+
+def manage_data():
+    headers = {
+           'raw_html.id': 'ID',
+           'raw_html.raw_text': 'Text'
+           }
+    
+    fields = (db.raw_html.id, db.raw_html.raw_text)
+
+    table = SQLFORM.grid(db.raw_html, headers=headers, fields=fields, maxtextlength=100, paginate=10, deletable=True, details=False, searchable=False, links = 
+       [lambda row: A('view', _href=URL("view_data",args=[row.id])), 
+       lambda row: A('delete',_href=URL("delete_raw",args=[row.id]))]) 
+    return dict(table=table)
+
+def manage_links():
+    headers = {
+           'urls.id': 'ID',
+           'urls.url': 'URL'
+           }
+    
+    fields = (db.urls.id, db.urls.url)
+
+    table = SQLFORM.grid(db.urls, headers=headers, fields=fields, maxtextlength=100, paginate=10, deletable=True, details=False, searchable=False, links = 
+       [lambda row: A('view', _href=row.url), 
+        lambda row: A('delete',_href=URL("delete_link",args=[row.id]))]) 
+    return dict(table=table)
+
+def view_data():
+    row = db(db.raw_html.id==request.args(0)).select().first()
+    return dict(row = row)
+
+def delete():
+     crud.delete(db.links, request.args(0), next=URL('manage'))
+
+def delete_link():
+     crud.delete(db.urls, request.args(0), next=URL('manage_links'))
+        
+def delete_raw():
+     crud.delete(db.raw_html, request.args(0), next=URL('manage_data'))
+        
+def delete_all():
+    db.links.truncate()
+    return redirect(URL('manage'))
+        
+def user():
+    """
+    exposes:
+    http://..../[app]/default/user/login
+    http://..../[app]/default/user/logout
+    http://..../[app]/default/user/register
+    http://..../[app]/default/user/profile
+    http://..../[app]/default/user/retrieve_password
+    http://..../[app]/default/user/change_password
+    http://..../[app]/default/user/manage_users (requires membership in
+    use @auth.requires_login()
+        @auth.requires_membership('group name')
+        @auth.requires_permission('read','table name',record_id)
+    to decorate functions that need access control
+    """
+    return dict(form=auth())
+
+@cache.action()
+def download():
+    """
+    allows downloading of uploaded files
+    http://..../[app]/default/download/[filename]
+    """
+    return response.download(request, db)
+
+
+def call():
+    """
+    exposes services. for example:
+    http://..../[app]/default/call/jsonrpc
+    decorate with @services.jsonrpc the functions to expose
+    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
+    """
+    return service()
+
+
+@auth.requires_signature()
+def data():
+    """
+    http://..../[app]/default/data/tables
+    http://..../[app]/default/data/create/[table]
+    http://..../[app]/default/data/read/[table]/[id]
+    http://..../[app]/default/data/update/[table]/[id]
+    http://..../[app]/default/data/delete/[table]/[id]
+    http://..../[app]/default/data/select/[table]
+    http://..../[app]/default/data/search/[table]
+    but URLs must be signed, i.e. linked with
+      A('table',_href=URL('data/tables',user_signature=True))
+    or with the signed load operator
+      LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
+    """
+    return dict(form=crud())

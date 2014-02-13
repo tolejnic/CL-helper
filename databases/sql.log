@@ -1,0 +1,763 @@
+timestamp: 2014-02-04T13:06:41.951819
+CREATE TABLE auth_user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    first_name CHAR(128),
+    last_name CHAR(128),
+    email CHAR(512),
+    password CHAR(512),
+    registration_key CHAR(512),
+    reset_password_key CHAR(512),
+    registration_id CHAR(512)
+);
+success!
+timestamp: 2014-02-04T13:06:41.977647
+CREATE TABLE auth_group(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    role CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2014-02-04T13:06:42.005665
+CREATE TABLE auth_membership(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE
+);
+success!
+timestamp: 2014-02-04T13:06:42.035999
+CREATE TABLE auth_permission(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    group_id INTEGER REFERENCES auth_group (id) ON DELETE CASCADE,
+    name CHAR(512),
+    table_name CHAR(512),
+    record_id INTEGER
+);
+success!
+timestamp: 2014-02-04T13:06:42.070723
+CREATE TABLE auth_event(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    time_stamp TIMESTAMP,
+    client_ip CHAR(512),
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    origin CHAR(512),
+    description TEXT
+);
+success!
+timestamp: 2014-02-04T13:06:42.100462
+CREATE TABLE auth_cas(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER REFERENCES auth_user (id) ON DELETE CASCADE,
+    created_on TIMESTAMP,
+    service CHAR(512),
+    ticket CHAR(512),
+    renew CHAR(1)
+);
+success!
+timestamp: 2014-02-04T13:07:51.144840
+CREATE TABLE mytable(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    url CHAR(512),
+    created TIMESTAMP
+);
+success!
+timestamp: 2014-02-04T13:13:27.960456
+ALTER TABLE mytable ADD city CHAR(512);
+success!
+timestamp: 2014-02-04T13:36:16.135206
+CREATE TABLE links(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name CHAR(512),
+    url CHAR(512),
+    city CHAR(512),
+    created TIMESTAMP
+);
+success!
+timestamp: 2014-02-04T14:29:04.025323
+ALTER TABLE links ADD viewed CHAR(1);
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+timestamp: 2014-02-08T12:24:39.670430
+ALTER TABLE links ADD created_time CHAR(512);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-02-08T12:47:07.594495
+CREATE TABLE urls(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    url CHAR(512)
+);
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+timestamp: 2014-02-08T14:14:08.211546
+CREATE TABLE raw_html(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    raw_text TEXT
+);
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!
+success!
+success!
+DELETE FROM links;
+DELETE FROM sqlite_sequence WHERE name='links';
+success!
+success!
+success!
+success!

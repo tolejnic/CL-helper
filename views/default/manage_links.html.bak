@@ -1,0 +1,4 @@
+{{extend 'layout.html'}}
+<h1>All URLS</h1>
+<a href={{=URL("manage")}} class="btn btn-success"> <i class="icon-th-list icon-white"></i> Manage Listings </a>
+{{=table}}
