@@ -11,21 +11,34 @@
 
 from bs4 import BeautifulSoup
 import requests
+from random import randint
 
 def index():
-    """
-    example action using the internationalization operator T and flash
-    rendered by views/default/index.html or views/generic.html
+    f = open('/var/www/web2py/applications/cl/static/proxies')
+    r = randint(0, 1500)
+    proxies = f.readlines()
+    f.close()
 
-    if you need a simple wiki simply replace the two lines below with:
-    return auth.wiki()
-    """
+    proxy = proxies[r].split(':')
 
+    proxy = {str(proxy[1]): str(proxy[0])}
+
+    headers = {
+	"Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+	"Accept-Encoding":"gzip,deflate,sdch",
+	"Accept-Language":"en-US,en;q=0.8",
+	"Cache-Control":"max-age=0",
+	"Connection":"keep-alive",
+	"Cookie":"cl_b=Mn-VhVxL5BGDJssYRfy2dg4EAc8; cl_tocmode=ggg%3Alist%2Cjjj%3Alist%2Csss%3Agrid%2Cbbb%3Alist%2Ceee%3Alist; cl_def_lang=en; cl_def_hp=sfbay",
+	"Host":"sfbay.craigslist.org",
+	"If-Modified-Since":"Fri, 10 Oct 2014 03:11:15 GMT",
+	"User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.101 Safari/537.36"
+    }
     rows = db().select(db.urls.ALL)
     for row in rows:
         url = row.url
         try:
-            r  = requests.get(url)
+            r  = requests.get(url, proxies=proxy, headers=headers)
             data = str(r.text)
             try:
                 row = db(db.raw_html.raw_text).select().first()
@@ -50,7 +63,7 @@ def index():
                 db.links.insert(name = " ".join(date[2:-1]), url = url.get('href'), city = loc[-1].split(")")[0], created_time=str(date[0]+" "+date[1]))
         except:
             return "Couldn't find links: %s" %(url)
-    return redirect(URL('manage'))
+    return str(soup)
     
 
 
