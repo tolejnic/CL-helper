@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-
+# new color scheme
+# #1DBCD0
+#
 def index():
     import requests
     from random import randint
