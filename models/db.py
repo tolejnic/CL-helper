@@ -39,24 +39,33 @@ response.generic_patterns = ['*'] if request.is_local else []
 ## - old style crud actions
 ## (more options discussed in gluon/tools.py)
 #########################################################################
-
+from gluon.contrib.sms_utils import SMSCODES, sms_email
 from gluon.tools import Auth, Crud, Service, PluginManager, prettydate
+import collections
+
 auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
+
+auth.settings.extra_fields[auth.settings.table_user_name] = [
+    Field('email_bool', 'boolean', label='Receive email notifications?'),
+    Field('sms', 'string'),
+    Field('carrier', requires=IS_IN_SET(SMSCODES.keys()))
+]
 
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
 
 ## configure email
 mail = auth.settings.mailer
-mail.settings.server = 'logging' or 'smtp.gmail.com:587'
-mail.settings.sender = 'you@gmail.com'
-mail.settings.login = 'username:password'
+mail.settings.server = 'smtp.gmail.com:587'
+mail.settings.sender = 'craigslisthelperr@gmail.com'
+mail.settings.login = 'craigslisthelperr:clhelper'
 
 ## configure auth policy
 auth.settings.registration_requires_verification = False
 auth.settings.registration_requires_approval = False
 auth.settings.reset_password_requires_verification = True
+
 
 ## if you need to use OpenID, Facebook, MySpace, Twitter, Linkedin, etc.
 ## register with janrain.com, write your domain:api_key in private/janrain.key
@@ -86,15 +95,16 @@ auth.enable_record_versioning(db)
 db.define_table('links',
     Field('id', 'integer'),
     Field('name','string', unique=True),
-    Field('url','string', readable=False),
+    Field('url','string', unique=True, readable=False),
+    Field('category', 'string'),
     Field('city','string'),
     Field('created_time','string'),
-    Field('viewed','boolean'))
+    Field('note', 'text')
+)
 
 db.define_table('urls',
     Field('id', 'integer'),
-    Field('url', 'string'))
-
-db.define_table('raw_html',
-    Field('id', 'integer'),
-    Field('raw_text', 'string'))
+    Field('url', 'string', unique=True),
+    Field('description'),
+    Field('raw_html', 'text', readable=False, writable=False)
+)

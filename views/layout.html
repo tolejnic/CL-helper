@@ -1,4 +1,9 @@
 <!--[if HTML5]><![endif]-->
+<style>
+  li .active{
+    color: #aaa;
+  }
+</style>
 <!DOCTYPE html>
 <!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
 <!--[if lt IE 7]><html class="ie ie6 ie-lte9 ie-lte8 ie-lte7 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
@@ -7,7 +12,7 @@
 <!--[if IE 9]><html class="ie9 ie-lte9 no-js" lang="{{=T.accepted_language or 'en'}}"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="{{=T.accepted_language or 'en'}}"> <!--<![endif]-->
 <head>
-<title>{{=response.title or request.application}}</title>
+<title>Craigslist Helper</title>
   <!--[if !HTML5]>
       <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
   <![endif]-->
@@ -91,59 +96,33 @@
 
   <div class="container">
     <!-- Masthead ================================================== -->
-    <header class="mastheader row" id="header">
-      {{if response.title:}}
-        <div class="span12">
-            <div class="page-header">
-                <h1>
-                    {{=response.title}}
-                    <small>{{=response.subtitle or ''}}</small>
-                </h1>
+
+
+
+            <div class="row" style="margin-top: 40px;">
+              <div class="span3">
+
+                <div class="well sidebar-nav">
+                  <ul class="nav nav-list">
+                    <li class="nav-header">Actions</li>
+                    <li class="active"><a href={{=URL("default", "manage")}}><i class="icon-globe icon-white"></i> Manage Listings</a></li>
+                    <li><a href={{=URL("default", "index")}}> <i class="icon-refresh icon-white"></i> Refresh </a></li>
+                    <li><a href={{=URL("manage_links")}}> <i class="icon-th-list icon-white"></i> Manage URLs</a></li>
+                    <li><a href={{=URL("delete_all")}}> <i class="icon-remove icon-white"></i> Delete All
+                    </a></li>
+                  </ul>
+                </div><!--/.well -->
+              </div>
+              <div class="span9">
+                {{include}}
+              </div>
             </div>
-        </div>
-	{{pass}}
-    </header>
+            
 
-    <section id="main" class="main row">
-        {{if left_sidebar_enabled:}}
-        <div class="span3 left-sidebar">
-            {{block left_sidebar}}
-            <h3>Left Sidebar</h3>
-            <p></p>
-            {{end}}
-        </div>
-        {{pass}}
 
-        <div class="{{=middle_columns}}">
-            {{block center}}
-            {{include}}
-            {{end}}
-        </div>
-
-        {{if right_sidebar_enabled:}}
-        <div class="span3">
-            {{block right_sidebar}}
-            <h3>Right Sidebar</h3>
-            <p></p>
-            {{end}}
-        </div>
-        {{pass}}
-    </section><!--/main-->
 
     <!-- Footer ================================================== -->
-    <div class="row">
-        <footer class="footer span12" id="footer">
-            <div class="footer-content">
-                {{block footer}} <!-- this is default footer -->
-                <div class="copyright pull-left">{{=T('Copyright')}} &#169; {{=request.now.year}}</div>
-                <div id="poweredBy" class="pull-right">
-                    {{=T('Powered by')}}
-                    <a href="http://www.web2py.com/">web2py</a>
-                </div>
-                {{end}}
-            </div>
-        </footer>
-    </div>
+
 
   </div> <!-- /container -->
 
@@ -163,7 +142,6 @@
     'Google Analytics':{trackingId:'{{=response.google_analytics_id}}'} 
   });</script>
   {{pass}}
-  <script src="{{=URL('static','js/share.js',vars=dict(static=URL('static','images')))}}"></script>
 </body>
 </html>
 

@@ -1,5 +1,47 @@
 {{extend 'layout.html'}}
-<a href={{=URL("index")}} class="btn btn-success"> <i class="icon-refresh icon-white"></i> Refresh </a>
-<a href={{=URL("add_link")}} class="btn btn-primary"> <i class="icon-plus icon-white"></i> Add URL </a>
-<a style="float:right" href={{=URL("delete_all")}} class="btn btn-danger"> <i class="icon-remove icon-white"></i> Delete All </a>
-{{=table}}
+
+<div id="myTabContent" class="tab-content" style="height: 80%; overflow-y: scroll;">
+
+<ul id="myTab" class="nav nav-tabs">
+{{first = True}}
+{{for url in urls:}}
+  {{if first == True:}}
+    {{first=False}}
+  	<li class="active">
+  {{else:}}
+  	<li class="">
+  {{pass}}
+  	<a href="#{{=url.description.replace(' ', '_')}}" data-toggle="tab">{{=url.description}}</a>
+  </li>
+{{pass}}
+</ul>
+
+	{{first = True}}
+	{{for table, url in zip(tables, urls):}}
+	  {{if first == True:}}
+        {{first=False}}
+		<div class="tab-pane fade active in" id={{=url.description.replace(' ', '_')}}>
+	  {{else:}}
+	  	<div class="tab-pane fade in" id={{=url.description.replace(' ', '_')}}>
+	  	{{pass}}
+
+  		{{if table:}}
+			{{=table}}
+		{{else:}}
+			<p> Start by uploading your URLs </p>
+		{{pass}}
+		</div>
+	  
+	{{pass}}
+</div>
+
+
+
+
+
+<script>
+$('#myTab a').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+})
+</script>

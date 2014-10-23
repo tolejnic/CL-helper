@@ -1,0 +1,28 @@
+{{extend 'layout.html'}}
+{{=form.custom.begin}}
+
+		<b>Name:</b> {{=form.custom.widget.name}}
+
+		<b>Date:</b> {{=form.custom.widget.created_time}}
+
+		<div>{{=form.custom.widget.note}}</div>
+
+<div hidden = True>{{=form.custom.widget.url}}</div>
+<div hidden = True>{{=form.custom.widget.city}}</div>
+
+
+<br />
+{{=form.custom.submit}}
+{{=form.custom.end}}
+
+<script src="{{=URL('static','js/redactor/redactor.js')}}"></script>
+<link rel="stylesheet" href="{{=URL('static', '/js/redactor/redactor.css')}}" />
+
+<script type="text/javascript">
+
+
+$(function()
+{
+    $('#links_note').redactor({ minHeight: 400});
+});
+</script>
