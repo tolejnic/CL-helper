@@ -29,7 +29,7 @@ def index():
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.101 Safari/537.36"
     }
 
-    urls = db().select(db.urls.ALL)
+    urls = db(db.urls.user_id == auth.user_id).select()
 
     for row in urls:
         url = row.url
@@ -44,8 +44,8 @@ def index():
                 update_list(new_html)
                 #send_sms(new_html)
 
-        except Exception, e:
-            return e
+        except:
+            pass
 
     return redirect(URL('default', 'manage'))
 
@@ -74,9 +74,11 @@ def compare_html(new_html, row):
         update_list(new_html)
         return False
 
+
 def send_sms(new_html):
     from gluon.contrib.sms_utils import SMSCODES, sms_email
     from bs4 import BeautifulSoup
+
     email = sms_email(db.auth_user[auth.user_id].sms, db.auth_user[auth.user_id].carrier)
     soup = BeautifulSoup(new_html)
     message = []
@@ -88,11 +90,11 @@ def send_sms(new_html):
             loc = link.get_text().split("(")
             title = loc[0].split()
             message.append(
-                " ".join(title[2:]) + ' (' +\
+                " ".join(title[2:]) + ' (' + \
                 loc[-1].split(")")[0] + ')')
         except:
             pass
-    return mail.send(to=email, subject = 'new listings', message=' '.join(list(message)))
+    return mail.send(to=email, subject='new listings', message=' '.join(list(message)))
 
 
 def update_list(new_html):
@@ -106,6 +108,7 @@ def update_list(new_html):
             loc = link.get_text().split("(")
             title = loc[0].split()
             db.links.insert(
+                user_id=auth.user_id,
                 name=" ".join(title[2:]),
                 url=url.get('href'),
                 city=loc[-1].split(")")[0],
@@ -118,16 +121,16 @@ def update_list(new_html):
 
 
 def manage():
-    #return send_sms('''<p class="row" data-pid="4715828170"> <a href="/nby/web/4715828170.html" class="i"></a> <span class="txt"> <span class="star"></span> <span class="pl"> <time datetime="2014-10-15 09:40" title="Wed 15 Oct 09:40:28 AM (1 days ago)">Oct 15</time>  <a href="/nby/web/4715828170.html" data-id="4715828170" class="hdrlnk">Senior Team Leader:  ePub Development</a> </span> <span class="l2">   <span class="pnr"> <small> (San Fran/Marin )</small> <span class="px"> <span class="p"> </span></span> </span>  </span> </span> </p> ''')
     import re
+
+    empty_table = """<div class="web2py_grid "><div class="web2py_console  "><div class="web2py_counter">None</div></div><div class="web2py_table"><div>No records found</div></div></div>"""
+    #return send_sms('''<p class="row" data-pid="4715828170"> <a href="/nby/web/4715828170.html" class="i"></a> <span class="txt"> <span class="star"></span> <span class="pl"> <time datetime="2014-10-15 09:40" title="Wed 15 Oct 09:40:28 AM (1 days ago)">Oct 15</time>  <a href="/nby/web/4715828170.html" data-id="4715828170" class="hdrlnk">Senior Team Leader:  ePub Development</a> </span> <span class="l2">   <span class="pnr"> <small> (San Fran/Marin )</small> <span class="px"> <span class="p"> </span></span> </span>  </span> </span> </p> ''')
     tables = []
-    urls = db(db.urls.id > 0).select()
+    urls = db(db.urls.user_id == auth.user_id).select()
     for u in urls:
         url = u.url
         url = re.sub('http://sfbay.craigslist.org/search/', '', url)
-        #return url
-        query=((db.links.url.contains(url)))
-        #db(db.product.colors.contains('red')).select()
+        query = ((db.links.user_id == auth.user_id and db.links.url.contains(url)))
         headers = {
             'links.created_time': 'Date',
             'links.city': 'City',
@@ -156,8 +159,8 @@ def manage():
                 ]
             )
         )
-
-    return dict(tables=tables, urls=urls)
+    #return tables[2]
+    return dict(tables=tables, urls=urls, empty_table=empty_table)
 
 
 def add_link():
@@ -174,6 +177,7 @@ def add_link():
 
 
 def manage_data():
+    query = ((db.raw_html.user_id == auth.user_id))
     headers = {
         'raw_html.id': 'ID',
         'raw_html.raw_text': 'Text'
@@ -182,7 +186,7 @@ def manage_data():
     fields = (db.raw_html.id, db.raw_html.raw_text)
 
     table = SQLFORM.grid(
-        db.raw_html,
+        query=query,
         headers=headers,
         fields=fields,
         maxtextlength=100,
@@ -199,6 +203,7 @@ def manage_data():
 
 
 def manage_links():
+    query = ((db.urls.user_id == auth.user_id))
     headers = {
         'urls.id': 'ID',
         'urls.url': 'URL'
@@ -206,31 +211,30 @@ def manage_links():
 
     fields = (db.urls.id, db.urls.url)
 
-    table = SQLFORM.grid(db.urls,
-                         headers=headers,
-                         fields=fields,
-                         maxtextlength=100,
-                         paginate=10,
-
-                         deletable=True,
-                         details=False,
-                         searchable=False,
-                         showbuttontext=False,
-                         csv=False,
-                         links=[
-                             lambda row: A('view', _href=row.url),
-                         ]
+    table = SQLFORM.grid(
+        query=query,
+        headers=headers,
+        fields=fields,
+        maxtextlength=100,
+        paginate=10,
+        deletable=True,
+        details=False,
+        searchable=False,
+        showbuttontext=False,
+        csv=False,
+        links=[
+            lambda row: A('view', _href=row.url),
+        ]
     )
     return dict(table=table)
 
 
 def view_data():
     row = db(db.raw_html.id == request.args(0)).select().first()
-    return dict(row=row)
-
-
-def delete():
-    crud.delete(db.links, request.args(0), next=URL('manage'))
+    if row.user_id == auth.user_id:
+        return dict(row=row)
+    else:
+        return None
 
 
 def edit_note():
@@ -238,19 +242,21 @@ def edit_note():
     return dict(form=form)
 
 
-def delete_link():
-    crud.delete(db.urls, request.args(0), next=URL('manage_links'))
+
+def delete_links():
+    db(db.links.user_id == auth.user_id).delete()
+    return redirect(URL('manage'))
 
 
-def delete_raw():
-    crud.delete(db.raw_html, request.args(0), next=URL('manage_data'))
-
-
-def delete_all():
-    db.links.truncate()
-    rows = db(db.urls.id > 0).select()
+def raw_html():
+    rows = db(db.urls.user_id == auth.user_id).select()
     for row in rows:
         row.update_record(raw_html=None)
+    return redirect(URL('manage'))
+
+
+def delete_urls():
+    db(db.urls.user_id == auth.user_id).delete()
     return redirect(URL('manage'))
 
 

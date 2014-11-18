@@ -11,7 +11,7 @@
 
 if not request.env.web2py_runtime_gae:
     ## if NOT running on Google App Engine use SQLite or other DB
-    db = DAL('sqlite://storage.sqlite',pool_size=1,check_reserved=['all'])
+    db = DAL('sqlite://storage.sqlite', pool_size=1, check_reserved=['all'])
 else:
     ## connect to Google BigTable (optional 'google:datastore://namespace')
     db = DAL('google:datastore')
@@ -47,9 +47,9 @@ auth = Auth(db)
 crud, service, plugins = Crud(db), Service(), PluginManager()
 
 auth.settings.extra_fields[auth.settings.table_user_name] = [
-    Field('email_bool', 'boolean', label='Receive email notifications?'),
+    Field('email_bool', requires=IS_IN_SET(['yes', 'no']), label='Receive notifications?'),
     Field('sms', 'string'),
-    Field('carrier', requires=IS_IN_SET(SMSCODES.keys()))
+    Field('carrier', requires=IS_IN_SET(sorted(SMSCODES.keys())))
 ]
 
 ## create all tables needed by auth if not custom tables
@@ -70,6 +70,7 @@ auth.settings.reset_password_requires_verification = True
 ## if you need to use OpenID, Facebook, MySpace, Twitter, Linkedin, etc.
 ## register with janrain.com, write your domain:api_key in private/janrain.key
 from gluon.contrib.login_methods.rpx_account import use_janrain
+
 use_janrain(auth, filename='private/janrain.key')
 
 #########################################################################
@@ -93,18 +94,19 @@ use_janrain(auth, filename='private/janrain.key')
 auth.enable_record_versioning(db)
 
 db.define_table('links',
-    Field('id', 'integer'),
-    Field('name','string', unique=True),
-    Field('url','string', unique=True, readable=False),
-    Field('category', 'string'),
-    Field('city','string'),
-    Field('created_time','string'),
-    Field('note', 'text')
+                Field('id', 'integer', readable=False, writable=False),
+                Field('user_id', default=auth.user_id, readable=False, writable=False),
+                Field('name', 'string'),
+                Field('url', 'string', readable=False),
+                Field('city', 'string'),
+                Field('created_time', 'string'),
+                Field('note', 'text')
 )
 
 db.define_table('urls',
-    Field('id', 'integer'),
-    Field('url', 'string', unique=True),
-    Field('description'),
-    Field('raw_html', 'text', readable=False, writable=False)
+                Field('id', 'integer', readable=False, writable=False),
+                Field('user_id', default=auth.user_id, readable=False, writable=False),
+                Field('url', 'string'),
+                Field('description'),
+                Field('raw_html', 'text', readable=False, writable=False)
 )

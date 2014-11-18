@@ -104,12 +104,33 @@
 
                 <div class="well sidebar-nav">
                   <ul class="nav nav-list">
-                    <li class="nav-header">Actions</li>
-                    <li class="active"><a href={{=URL("default", "manage")}}><i class="icon-globe icon-white"></i> Manage Listings</a></li>
-                    <li><a href={{=URL("default", "index")}}> <i class="icon-refresh icon-white"></i> Refresh </a></li>
-                    <li><a href={{=URL("manage_links")}}> <i class="icon-th-list icon-white"></i> Manage URLs</a></li>
-                    <li><a href={{=URL("delete_all")}}> <i class="icon-remove icon-white"></i> Delete All
-                    </a></li>
+                    <li class="nav-header">Links</li>
+                    {{if request.function == 'manage':}}
+                      <li class="active">
+                    {{else:}}
+                      <li>
+                    {{pass}}
+                    <a href={{=URL("default", "manage")}}><i class="icon-globe"></i> Manage Listings</a></li>
+                    {{if request.function == 'manage_links':}}
+                      <li class="active">
+                    {{else:}}
+                      <li>
+                    {{pass}}                      
+                    <a href={{=URL("manage_links")}}> <i class="icon-th-list"></i> Manage URLs</a></li>
+                    {{if request.function == 'user':}}
+                      <li class="active">
+                    {{else:}}
+                      <li>
+                    {{pass}}
+                        <a href={{=URL("default", "user", args="profile")}}> <i class="icon-user"></i> Profile</a></li>
+                      </li>
+                      <hr />
+                      <li class="nav-header">Actions</li>
+
+                      <li><a href={{=URL("default", "index")}}> <i class="icon-refresh"></i> Refresh </a></li>
+                      <li><a href={{=URL("delete_links")}}> <i class="icon-remove"></i> Delete Links</a></li>
+                      <li><a href={{=URL("delete_urls")}}> <i class="icon-remove-sign"></i> Delete URLs</a></li>
+
                   </ul>
                 </div><!--/.well -->
               </div>

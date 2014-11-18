@@ -2,42 +2,55 @@
 
 <div id="myTabContent" class="tab-content" style="height: 80%; overflow-y: scroll;">
 
-<ul id="myTab" class="nav nav-tabs">
-{{first = True}}
-{{for url in urls:}}
-  {{if first == True:}}
-    {{first=False}}
-  	<li class="active">
-  {{else:}}
-  	<li class="">
-  {{pass}}
-  	<a href="#{{=url.description.replace(' ', '_')}}" data-toggle="tab">{{=url.description}}</a>
-  </li>
-{{pass}}
-</ul>
+    <ul id="myTab" class="nav nav-tabs">
+        {{first = True}}
+        {{for url in urls:}}
+            {{if first == True:}}
+                {{first=False}}
+                <li class="active">
+            {{else:}}
+                <li>
+            {{pass}}
+                <a href="#{{=url.description.replace(' ', '_')}}" data-toggle="tab">{{=url.description}}</a>
+            </li>
+        {{pass}}
+    </ul>
 
-	{{first = True}}
-	{{for table, url in zip(tables, urls):}}
-	  {{if first == True:}}
-        {{first=False}}
-		<div class="tab-pane fade active in" id={{=url.description.replace(' ', '_')}}>
-	  {{else:}}
-	  	<div class="tab-pane fade in" id={{=url.description.replace(' ', '_')}}>
-	  	{{pass}}
 
-  		{{if table:}}
-			{{=table}}
-		{{else:}}
-			<p> Start by uploading your URLs </p>
-		{{pass}}
-		</div>
-	  
+
+    {{if urls:}}
+        {{first = True}}
+        {{for table, url in zip(tables, urls):}}
+            {{if first == True:}}
+                {{first=False}}
+                <div class="tab-pane fade active in" id={{=url.description.replace(' ', '_')}}>
+            {{else:}}
+                <div class="tab-pane fade in" id={{=url.description.replace(' ', '_')}}>
+            {{pass}}
+            {{if str(table) == empty_table:}}
+                <div class="row">
+                    <br />
+                    <br />
+                    <div class="span12">
+                        <h1> <small> Try <a href={{=URL("index")}}> refreshing </a>your listings</small></h1>
+                    </div>
+                </div>
+            {{else:}}
+                {{=table}}
+            {{pass}}
+                </div>
+        {{pass}}
+    {{else:}}
+        <div class="row">
+            <br />
+            <br />
+            <div class="span12">
+                <h1> <small> You can start by <a href={{=URL("manage_links")}}> uploading your URLs</a></small></h1>
+            </div>
+        </div>
 	{{pass}}
 </div>
-
-
-
-
+</div>
 
 <script>
 $('#myTab a').click(function (e) {
