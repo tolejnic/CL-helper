@@ -13,8 +13,8 @@ def index():
 
     #set up a random proxy
     r = randint(0, 1500)
-    proxy = proxies[r].split(':')
-    proxy = {str(proxy[1]): str(proxy[0])}
+    proxy = proxies[r].strip('\n')
+    proxy = {'https': str(proxy[0])}
 
     #spoof some headers
     headers = {
@@ -23,10 +23,9 @@ def index():
         "Accept-Language": "en-US,en;q=0.8",
         "Cache-Control": "max-age=0",
         "Connection": "keep-alive",
-        "Cookie": "cl_b=Mn-VhVxL5BGDJssYRfy2dg4EAc8; cl_tocmode=ggg%3Alist%2Cjjj%3Alist%2Csss%3Agrid%2Cbbb%3Alist%2Ceee%3Alist; cl_def_lang=en; cl_def_hp=sfbay",
         "Host": "sfbay.craigslist.org",
         "If-Modified-Since": "Fri, 10 Oct 2014 03:11:15 GMT",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/38.0.2125.101 Safari/537.36"
+        "User-Agent": "Mozilla/5.07.36"
     }
 
     urls = db(db.urls.user_id == auth.user_id).select()
